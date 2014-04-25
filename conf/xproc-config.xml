@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cc:xproc-config xmlns:cc="http://xmlcalabash.com/ns/configuration">
+  <cc:fo-processor class-name="com.xmlcalabash.util.FoFOP"/>
+</cc:xproc-config>
