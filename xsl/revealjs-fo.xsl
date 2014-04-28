@@ -115,7 +115,10 @@
   <xsl:template match="img">
     <fo:block>
       <fo:external-graphic src="{concat($base-dir, '/', @src)}" content-type="{replace(@src, '^.+\.([a-z]+)$', '$1')}" 
-        content-height="auto" content-width="{concat(xs:decimal(replace($slide-width, '[a-z]+', '')) - 4 * xs:decimal(replace($slide-padding, '[a-z]+', '')), replace($slide-width, '[0-9]+', ''))}" scaling="uniform"/>  
+        scaling="uniform"
+        content-width="scale-to-fit"
+        content-height="80%"
+        width="80%"/>  
     </fo:block>
   </xsl:template>
   
@@ -131,7 +134,7 @@
     <fo:block font-family="Courier, monospace" font-size="{concat($base-font-size * 0.9, 'pt')}">
       <xsl:analyze-string select="." regex="(.+?)\n">
         <xsl:matching-substring>
-          <fo:block >
+          <fo:block>
             <xsl:value-of select="."/>
           </fo:block>
         </xsl:matching-substring>
@@ -148,6 +151,53 @@
   
   <xsl:template match="br">
     <fo:block line-height="0"></fo:block>
+  </xsl:template>
+  
+  <!-- tables -->
+
+  <xsl:template match="table">
+    <fo:table table-layout="fixed" border-top="2pt solid black" border-bottom="0.5pt solid black" 
+      space-before="{concat($base-line-height * 0.8, 'pt')}" space-after="{$base-line-height}" font-size="{concat($base-font-size * 0.8, 'pt')}"
+      keep-together.within-page="always">
+      <fo:table-body>
+        <xsl:apply-templates/>
+      </fo:table-body>
+    </fo:table>
+  </xsl:template>
+  
+  <xsl:template match="tr">
+    <fo:table-row border-bottom="0.5pt solid black"
+      keep-together.within-page="always">
+      <xsl:apply-templates/>
+    </fo:table-row>
+  </xsl:template>
+  
+  <xsl:template match="td|th">
+    <fo:table-cell block-progression-dimension.minimum="{$base-line-height}" padding="1pt"> 
+      <fo:block>
+        <xsl:apply-templates/>
+      </fo:block>
+    </fo:table-cell>
+  </xsl:template>
+  
+  <!-- inline-styles -->
+  
+  <xsl:template match="small">
+    <fo:inline font-size="{concat($base-font-size * 0.7, 'pt')}" line-height="{concat($base-font-size * 0.5, 'pt')}">
+      <xsl:apply-templates/>
+    </fo:inline>
+  </xsl:template>
+  
+  <xsl:template match="i|emphasis">
+    <fo:inline font-style="italic">
+      <xsl:apply-templates/>
+    </fo:inline>
+  </xsl:template>
+  
+  <xsl:template match="b|strong">
+    <fo:inline font-weight="bold">
+      <xsl:apply-templates/>
+    </fo:inline>
   </xsl:template>
 
 </xsl:stylesheet>
